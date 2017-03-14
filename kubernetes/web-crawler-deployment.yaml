@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: web-crawler
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: web-crawler
+    spec:
+      containers:
+      - env:
+        - name: NODE_ENV
+          value: production
+        - name: ANTARES_SECRET
+          value: ''
+        - name: YOUTUBE_API_KEY
+          value: ''
+        image: langleu/schulcloud-content-crawler
+        name: web-crawler
+        ports:
+        - containerPort: 8091
+        resources: {}
+      restartPolicy: Always
+status: {}

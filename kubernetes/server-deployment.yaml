@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: server
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: server
+    spec:
+      containers:
+      - env:
+        - name: NODE_ENV
+          value: production
+        - name: SMTP
+          value: ''
+        - name: ACCESS_KEY_ID
+          value: ''
+        - name: SECRET_ACCESS_KEY
+          value: ''
+        - name: ENDPOINT_URL
+          value: ''
+        image: langleu/schulcloud-server
+        name: server
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+status: {}

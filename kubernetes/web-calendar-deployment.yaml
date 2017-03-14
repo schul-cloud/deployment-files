@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: web-calendar
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: web-calendar
+    spec:
+      containers:
+      - env:
+        - name: DB_PASSWORD
+          value: ChangeHere
+        image: langleu/schulcloud-calendar
+        name: web-calendar
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+status: {}

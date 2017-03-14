@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: client
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: client
+    spec:
+      containers:
+      - env:
+        - name: NODE_ENV
+          value: production
+        image: langleu/schulcloud-client
+        name: client
+        ports:
+        - containerPort: 3100
+        resources: {}
+      restartPolicy: Always
+status: {}

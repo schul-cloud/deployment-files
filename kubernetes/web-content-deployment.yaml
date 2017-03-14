@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: web-content
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: web-content
+    spec:
+      containers:
+      - env:
+        - name: NODE_ENV
+          value: production
+        image: langleu/schulcloud-content-api
+        name: web-content
+        ports:
+        - containerPort: 8090
+        resources: {}
+      restartPolicy: Always
+status: {}

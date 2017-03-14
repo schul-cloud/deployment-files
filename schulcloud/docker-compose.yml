@@ -1,0 +1,53 @@
+version: "2"
+
+services:
+  ### schulcloud client and server
+  mongodbsc:
+    image: mongo:3.4
+    ports:
+      - "27017"
+    volumes:
+      - 'data-sc:/data/db'
+    restart: always
+
+  server:
+    build: server
+    depends_on:
+      - mongodbsc
+    links:
+      - mongodbsc
+    environment:
+      - NODE_ENV=production
+      - SMTP=
+      - ACCESS_KEY_ID=
+      - SECRET_ACCESS_KEY=
+      - ENDPOINT_URL=
+    restart: always
+
+  client:
+    build: client
+    depends_on:
+      - mongodbsc
+      - server
+    links:
+      - mongodbsc
+      - server
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+  nginx:
+    build: nginx
+    ports:
+      - "80:80"
+      - "8080:8080"
+    links:
+      - mongodbsc
+      - server
+      - client
+    environment:
+      - NGINX_HOST=localhost
+    restart: always
+
+volumes:
+  data-sc:

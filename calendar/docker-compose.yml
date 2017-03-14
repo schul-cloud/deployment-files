@@ -1,0 +1,28 @@
+version: "2"
+
+services:
+  postgres:
+    image: postgres:9.5
+    ports:
+      - "5432"
+    volumes:
+      - 'data-calendar:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_DB=schulcloud_calendar
+      - POSTGRES_USER=node
+    restart: always
+
+  web-calendar:
+    build: calendar/calendar-api
+    ports:
+      - "3000"
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    environment:
+      - DB_PASSWORD=ChangeHere
+    restart: always
+
+volumes:
+  data-calendar:

@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: mongo-connector
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: mongo-connector
+    spec:
+      containers:
+      - image: langleu/schulcloud-mongo-connector
+        name: mongo-connector
+        resources: {}
+      restartPolicy: Always
+status: {}

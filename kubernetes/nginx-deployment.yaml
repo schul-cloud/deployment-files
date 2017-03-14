@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: nginx
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: nginx
+    spec:
+      containers:
+      - env:
+        - name: NGINX_HOST
+          value: localhost
+        image: langleu/schulcloud-nginx-local
+        name: nginx
+        ports:
+        - containerPort: 80
+        - containerPort: 8080
+        - containerPort: 3000
+        - containerPort: 8090
+        - containerPort: 8091
+        resources: {}
+      restartPolicy: Always
+status: {}

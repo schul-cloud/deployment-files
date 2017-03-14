@@ -1,0 +1,144 @@
+version: "2"
+
+services:
+  ### schulcloud client and server
+  mongodbsc:
+    image: mongo:3.4
+    ports:
+      - "27017"
+    volumes:
+      - 'data-sc:/data/db'
+    restart: always
+
+  server:
+    image: langleu/schulcloud-server
+    depends_on:
+      - mongodbsc
+    links:
+      - mongodbsc
+    environment:
+      - NODE_ENV=production
+      - SMTP=
+      - ACCESS_KEY_ID=
+      - SECRET_ACCESS_KEY=
+      - ENDPOINT_URL=
+    ports:
+      - "8080"
+    restart: always
+
+  client:
+    image: langleu/schulcloud-client
+    depends_on:
+      - mongodbsc
+      - server
+    links:
+      - mongodbsc
+      - server
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3100"
+    restart: always
+
+  nginx:
+    image: langleu/schulcloud-nginx-local
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "3000:3000"
+      - "8090:8090"
+      - "8091:8091"
+    links:
+      - mongodbsc
+      - server
+      - client
+      - web-calendar
+      - web-crawler
+      - web-content
+    environment:
+      - NGINX_HOST=localhost
+    restart: always
+
+  ### calendar service
+  postgres:
+    image: postgres:9.5
+    ports:
+      - "5432"
+    volumes:
+      - 'data-calendar:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_DB=schulcloud_calendar
+      - POSTGRES_USER=node
+    restart: always
+
+  web-calendar:
+    image: langleu/schulcloud-calendar
+    ports:
+      - "3000"
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    environment:
+      - DB_PASSWORD=NotInUseYet
+    restart: always
+
+  ### content service
+  mongodb:
+    image: langleu/schulcloud-mongodb
+    ports:
+      - "27017"
+    volumes:
+      - 'data-content:/data/db'
+    restart: always
+
+  elasticsearch:
+    image: langleu/schulcloud-elasticsearch
+    ports:
+      - "9200"
+      - "9300"
+    volumes:
+      - 'data-content:/usr/share/elasticsearch/data'
+    restart: always
+
+  mongo-connector:
+    image: langleu/schulcloud-mongo-connector
+    links:
+      - mongodb
+      - elasticsearch
+    depends_on:
+      - mongodb
+      - elasticsearch
+    restart: always
+
+  web-crawler:
+    image: langleu/schulcloud-content-crawler
+    ports:
+      - "8091"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    environment:
+      - NODE_ENV=production
+      - ANTARES_SECRET=
+      - YOUTUBE_API_KEY=
+    restart: always
+
+  web-content:
+    image: langleu/schulcloud-content-api
+    ports:
+      - "8090"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+# If using kompose, then comment out the following:
+volumes:
+  data-sc:
+  data-content:
+  data-calendar:

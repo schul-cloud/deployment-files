@@ -1,0 +1,52 @@
+version: "2"
+
+services:
+    ### content service
+  mongodb:
+    image: langleu/schulcloud-mongodb
+    ports:
+      - "27017"
+    volumes:
+      - 'data-content:/data/db'
+
+  elasticsearch:
+    image: langleu/schulcloud-elasticsearch
+    ports:
+      - "9200"
+      - "9300"
+    volumes:
+      - 'data-content:/usr/share/elasticsearch/data'
+
+  mongo-connector:
+    image: langleu/schulcloud-mongo-connector
+    links:
+      - mongodb
+      - elasticsearch
+    depends_on:
+      - mongodb
+      - elasticsearch
+    restart: always
+
+  web-crawler:
+    image: langleu/schulcloud-content-crawler
+    ports:
+      - "8091"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    environment:
+      - NODE_ENV=production
+      - ANTARES_SECRET=
+      - YOUTUBE_API_KEY=
+
+  web-content:
+    image: langleu/schulcloud-content-api
+    ports:
+      - "8090"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    environment:
+      - NODE_ENV=production

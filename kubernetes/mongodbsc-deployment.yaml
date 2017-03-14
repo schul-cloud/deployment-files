@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: mongodbsc
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: mongodbsc
+    spec:
+      containers:
+      - image: mongo:3.4
+        name: mongodbsc
+        ports:
+        - containerPort: 27017
+        resources: {}
+      restartPolicy: Always
+status: {}
