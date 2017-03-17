@@ -33,4 +33,7 @@ Every service has its own `docker-compose.yml` in the included sub-directory or 
 This project also includes converted [kubernetes](https://github.com/kubernetes/kubernetes) files from the main `docker-compose.yml`.
 These files are converted using the [kompose tool](https://github.com/kubernetes-incubator/kompose).
 
+- These kubernetes files are specially made for azure
+- Add your StorageAccount to the `kubernetes/storage-creator.yaml`
+
 >Advice: Instead of converting the `docker-compose.yml` to kubernetes compatible files again, just change the according things in the files itself.

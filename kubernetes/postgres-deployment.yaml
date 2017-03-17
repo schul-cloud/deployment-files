@@ -19,10 +19,19 @@ spec:
           value: schulcloud_calendar
         - name: POSTGRES_USER
           value: node
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pq
         image: postgres:9.5
         name: postgres
         ports:
         - containerPort: 5432
         resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data-calendar
       restartPolicy: Always
+      volumes:
+      - name: data-calendar
+        persistentVolumeClaim:
+          claimName: data-calendar
 status: {}

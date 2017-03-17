@@ -20,5 +20,12 @@ spec:
         - containerPort: 9200
         - containerPort: 9300
         resources: {}
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: data-content
       restartPolicy: Always
+      volumes:
+      - name: data-content
+        persistentVolumeClaim:
+          claimName: data-content
 status: {}
