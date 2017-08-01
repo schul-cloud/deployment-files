@@ -1,10 +1,11 @@
 import psycopg2
 import subprocess
+import os
 conn = None
 i = 0
 while i < 10:
 	try:
-			conn = psycopg2.connect("dbname='schulcloud_calendar' user='node' host='postgres'")
+			conn = psycopg2.connect(dbname=os.environ["DB_DATABASE"], user=os.environ["DB_USERNAME"], password=os.environ["DB_PASSWORD"], host=os.environ["DB_HOST"])
 			print("Successfully connected to postgres")
 			break
 	except:

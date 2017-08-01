@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  ### schulcloud notification service
+  ### mongodb only defined for fully functional example, in the end it will use the same as the main server
+  mongodbsc:
+    image: mongo:3.4
+    ports:
+      - "27017"
+    volumes:
+      - 'data-sc:/data/db'
+    restart: always
+
+  notification:
+    build: service
+    depends_on:
+      - mongodbsc
+    links:
+      - mongodbsc
+    environment:
+      - NODE_ENV=production
+      - BASE_PATH=http://localhost:8080
+      - AUTHENTICATION_API_ENDPOINT=/resolve/users/
+      - AUTHORIZATION_API_ENDPOINT=/resolve/scopes/
+      - RESOLVE_API_ENDPOINT=/resolve/users/
+      - MAILS_API_ENDPOINT=/mails/
+      - CALLBACK_API_ENDPOINT=/notification/callback/
+    restart: always
+
+volumes:
+  data-sc:

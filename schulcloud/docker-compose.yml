@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   ### schulcloud client and server
@@ -18,10 +18,6 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
-      - SMTP=
-      - ACCESS_KEY_ID=
-      - SECRET_ACCESS_KEY=
-      - ENDPOINT_URL=
     restart: always
 
   client:

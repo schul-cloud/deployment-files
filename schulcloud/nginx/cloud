@@ -3,8 +3,8 @@ upstream node {
     keepalive 256;
 }
 
-upstream crawler {
-    server web-crawler:8091;
+upstream notification {
+    server notification:3030;
     keepalive 256;
 }
 
@@ -13,11 +13,7 @@ upstream calendar {
     keepalive 256;
 }
 
-upstream content {
-    server web-content:8090;
-    keepalive 256;
-}
-
+# schulcloud server
 server {
     listen       8080;
     server_name  localhost;
@@ -46,6 +42,36 @@ server {
     }
 }
 
+# schulcloud notification
+server {
+    listen       3030;
+    server_name  localhost;
+
+    location / {
+    # the following is required for WebSockets
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy true;
+
+      # supposedly prevents 502 bad gateway error;
+      # ultimately not necessary in my case
+      proxy_buffers 8 32k;
+      proxy_buffer_size 64k;
+
+      # the following is required
+      proxy_pass http://notification;
+      proxy_redirect off;
+
+      # the following is required as well for WebSockets
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+
+    }
+}
+
+# schulcloud calendar
 server {
     listen       3000;
     server_name  localhost;
@@ -74,62 +100,7 @@ server {
     }
 }
 
-server {
-    listen       8091;
-    server_name  localhost;
-
-    location / {
-    # the following is required for WebSockets
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header Host $http_host;
-      proxy_set_header X-NginX-Proxy true;
-
-      # supposedly prevents 502 bad gateway error;
-      # ultimately not necessary in my case
-      proxy_buffers 8 32k;
-      proxy_buffer_size 64k;
-
-      # the following is required
-      proxy_pass http://crawler;
-      proxy_redirect off;
-
-      # the following is required as well for WebSockets
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection "upgrade";
-
-    }
-}
-
-server {
-    listen       8090;
-    server_name  localhost;
-
-    location / {
-    # the following is required for WebSockets
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header Host $http_host;
-      proxy_set_header X-NginX-Proxy true;
-
-      # supposedly prevents 502 bad gateway error;
-      # ultimately not necessary in my case
-      proxy_buffers 8 32k;
-      proxy_buffer_size 64k;
-
-      # the following is required
-      proxy_pass http://content;
-      proxy_redirect off;
-
-      # the following is required as well for WebSockets
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection "upgrade";
-
-    }
-}
-
+# schucloud client
 server {
     listen       80;
     server_name  localhost;

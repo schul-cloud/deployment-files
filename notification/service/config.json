@@ -1,0 +1,18 @@
+{
+  "certificates": {
+    "password": "genericpassword"
+  },
+  "sendServices": {
+    "apn": {
+      "token": {
+        "key": "generickey",
+        "keyId": "genericid",
+        "teamId": "genericid"
+      },
+      "production": true
+    },
+    "firebase": {
+      "serverToken": "generictoken"
+    }
+  }
+}
