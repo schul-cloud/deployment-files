@@ -11,7 +11,7 @@ services:
     restart: always
 
   server:
-    build: schulcloud/server
+    image: langleu/schulcloud-server
     depends_on:
       - mongodbsc
     links:
@@ -20,10 +20,18 @@ services:
       - NODE_ENV=production
     ports:
       - "8080"
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
   client:
-    build: schulcloud/client
+    image: langleu/schulcloud-client
     depends_on:
       - mongodbsc
       - server
@@ -35,10 +43,18 @@ services:
       - CALENDAR_SERVICE_ENABLED=true
     ports:
       - "3100"
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
   nginx:
-    build: schulcloud/nginx
+    image: langleu/schulcloud-nginx-local
     ports:
       - "80:80"
       - "8080:8080"
@@ -52,6 +68,10 @@ services:
       - notification
     environment:
       - NGINX_HOST=localhost
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
   ### calendar service
@@ -68,7 +88,7 @@ services:
     restart: always
 
   web-calendar:
-    build: calendar/calendar-api
+    image: langleu/schulcloud-calendar
     ports:
       - "3000"
     depends_on:
@@ -85,11 +105,15 @@ services:
       - SCHULCLOUD_ALL_USERS_FOR_UUID=/resolve/users/
       - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=/resolve/scopes/
       - NOTIFICATION_SERVICE_NEW_NOTIFICATION=/messages
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
   ### notification service
   notification:
-    build: notification/service
+    image: langleu/schulcloud-notification
     ports:
       - "3030"
     depends_on:
@@ -104,6 +128,10 @@ services:
       - RESOLVE_API_ENDPOINT=/resolve/users/
       - MAILS_API_ENDPOINT=/mails/
       - CALLBACK_API_ENDPOINT=/notification/callback/
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
 # If using kompose, then comment out the following:

@@ -18,6 +18,14 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
   client:
@@ -30,6 +38,14 @@ services:
       - server
     environment:
       - NODE_ENV=production
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
     restart: always
 
   nginx:
@@ -43,6 +59,11 @@ services:
       - client
     environment:
       - NGINX_HOST=localhost
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s  
     restart: always
 
 volumes:

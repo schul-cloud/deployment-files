@@ -25,6 +25,11 @@ services:
       - RESOLVE_API_ENDPOINT=/resolve/users/
       - MAILS_API_ENDPOINT=/mails/
       - CALLBACK_API_ENDPOINT=/notification/callback/
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s  
     restart: always
 
 volumes:
