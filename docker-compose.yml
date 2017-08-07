@@ -41,6 +41,7 @@ services:
     environment:
       - NODE_ENV=production
       - CALENDAR_SERVICE_ENABLED=true
+      - BACKEND_URL=http://server:8080
     ports:
       - "3100"
     deploy:

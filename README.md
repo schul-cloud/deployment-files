@@ -1,4 +1,8 @@
+
 # dockerfiles (deployment)
+---
+> <span style="color:red">This repository only contains deployment files and is not meant for development.</span>
+---
 This project includes all dockerfiles for the deployment of the schul-cloud and its services.
 
 For further information on docker, docker-compose, and docker-swarm, please visit their [documentation](https://docs.docker.com/).
@@ -8,6 +12,8 @@ Every service has its own `docker-compose.yml` in the included sub-directory or 
 ## Schul-Cloud
 #### Server
 For the initial running of the server no secrets are needed, but as in every project there are sometimes secrets you need for extra services such as E-Mail (SMTP) or our Storage Endpoint (AWS S3).
+
+> Soon as environment variable again for easier secret handling
 
 - Add your secrets to the `secrets.json`, which can be found in `schulcloud/server` including:
   - SMTP
@@ -24,6 +30,8 @@ For the initial running of the server no secrets are needed, but as in every pro
 ---
 (optional) | For further configurations please edit the `production.json`, which can be found in `schulcloud/server`.
 
+> Soon as environment variable again for easier config handling
+
 - mongodb:
 	- can be adjusted to the uri of your mongodb including the username:password or let it only talk through the docker network to your mongodb.
 	- example: "mongodb://mongodbsc:27017:schulcloud"
@@ -31,7 +39,7 @@ For the initial running of the server no secrets are needed, but as in every pro
 	- here you are able to edit the endpoints to the specific services, such as content, calendar or notification.
 
 #### Client
-- Change the BACKEND_URL in the `Dockerfile`, which can be found in `schulcloud/client` to your appropriate host name and port number.
+- Change the BACKEND_URL in the `docker-compose.yml`, which can be found in either `schulcloud/client` or the main folder of this repository, to your appropriate host name and port number.
 	- example: "https://schul-cloud.org:8080"
 
 #### NGINX

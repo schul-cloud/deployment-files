@@ -38,6 +38,7 @@ services:
       - server
     environment:
       - NODE_ENV=production
+      - BACKEND_URL=http://server:8080
     deploy:
       replicas: 2
       update_config:
@@ -63,7 +64,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-        delay: 10s  
+        delay: 10s
     restart: always
 
 volumes:
