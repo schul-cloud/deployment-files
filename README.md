@@ -26,6 +26,18 @@ For the initial running of the server no secrets are needed, but as in every pro
 	  - example: "https://genericurl.com"
   - AUTHENTICATION
 	  - example: "verylonggenericstring"
+  - SMTP_HOST
+    - example: "127.0.0.1"
+  - SMTP_PORT
+    - example: "25"
+  - MONGO_URI
+    - example: "mongodb://mongodbsc:27017/schulcloud"
+  - CALENDAR_URI
+    - example: http://web-calendar:3000
+  - CONTENT_URI
+    - example: http://deprecated:666
+  - NOTIFICATION_URI
+    - example: http://notification:3030
 
 ---
 (optional) | For further configurations please edit the `production.json`, which can be found in `schulcloud/server`.

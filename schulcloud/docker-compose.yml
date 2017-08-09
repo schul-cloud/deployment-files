@@ -18,6 +18,16 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
+      - SMTP_HOST=127.0.0.1
+      - SMTP_PORT=25
+      - AUTHENTICATION=verylonggenericstring
+      - AWS_ENDPOINT_URL=https://genericurl.com
+      - AWS_SECRET_ACCESS_KEY=genericstring
+      - AWS_ACCESS_KEY=genericstring
+      - MONGO_URI=mongodb://mongodbsc:27017/schulcloud
+      - CALENDAR_URI=http://web-calendar:3000
+      - CONTENT_URI=http://deprecated:666
+      - NOTIFICATION_URI=http://notification:3030
     deploy:
       replicas: 2
       update_config:
