@@ -12,23 +12,26 @@ services:
     restart: always
 
   notification:
+    image: langleu/schulcloud-notification
     build: service
+    ports:
+      - "3030"
     depends_on:
       - mongodbsc
     links:
       - mongodbsc
     environment:
       - NODE_ENV=production
-      - BASE_PATH=http://localhost:9000
+      - BASE_PATH=http://server:9000
       - AUTHENTICATION_API_ENDPOINT=/resolve/users/
       - AUTHORIZATION_API_ENDPOINT=/resolve/scopes/
       - RESOLVE_API_ENDPOINT=/resolve/users/
       - MAILS_API_ENDPOINT=/mails/
       - CALLBACK_API_ENDPOINT=/notification/callback/
+      - FIREBASE_TOKEN=generictoken
     deploy:
-      mode: global
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 

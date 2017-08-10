@@ -38,7 +38,7 @@ services:
         parallelism: 1
         delay: 30s
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
@@ -64,7 +64,7 @@ services:
         parallelism: 1
         delay: 30s
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
@@ -86,7 +86,7 @@ services:
       - NGINX_HOST=localhost
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
@@ -125,7 +125,7 @@ services:
       - NODE_ENV=production
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
@@ -147,9 +147,10 @@ services:
       - RESOLVE_API_ENDPOINT=/resolve/users/
       - MAILS_API_ENDPOINT=/mails/
       - CALLBACK_API_ENDPOINT=/notification/callback/
+      - FIREBASE_TOKEN=generictoken
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 

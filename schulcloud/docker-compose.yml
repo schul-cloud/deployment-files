@@ -38,7 +38,7 @@ services:
         parallelism: 1
         delay: 30s
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
@@ -54,7 +54,7 @@ services:
     environment:
       - NODE_ENV=production
       - CALENDAR_SERVICE_ENABLED=true
-      - BACKEND_URL=http://server:8080
+      - BACKEND_URL=http://server:9000
       - HOST=https://schul-cloud.org
     ports:
       - "3100"
@@ -64,7 +64,7 @@ services:
         parallelism: 1
         delay: 30s
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
@@ -73,18 +73,20 @@ services:
     build: nginx
     ports:
       - "80:80"
-      - "8080:8080"
+      - "9000:9000"
       - "3000:3000"
       - "3030:3030"
     links:
       - mongodbsc
       - server
       - client
+      - web-calendar
+      - notification
     environment:
       - NGINX_HOST=localhost
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 10s
     restart: always
 
