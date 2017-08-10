@@ -19,7 +19,7 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
-      - BASE_PATH=http://localhost:8080
+      - BASE_PATH=http://localhost:9000
       - AUTHENTICATION_API_ENDPOINT=/resolve/users/
       - AUTHORIZATION_API_ENDPOINT=/resolve/scopes/
       - RESOLVE_API_ENDPOINT=/resolve/users/
@@ -29,7 +29,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-        delay: 10s  
+        delay: 10s
     restart: always
 
 volumes:

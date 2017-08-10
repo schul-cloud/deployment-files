@@ -14,5 +14,5 @@ python get-pip.py && \
 python -m pip install pymongo && \
 echo "#!/bin/sh\n./backup.sh -H mongodbsc:27017 -p setup/ -a import" >> seed.sh && \
 chmod +x seed.sh
-EXPOSE 8080
+EXPOSE 9000
 CMD python check.py
