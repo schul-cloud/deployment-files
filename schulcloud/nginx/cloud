@@ -1,5 +1,5 @@
 upstream node {
-    server server:8080;
+    server server:9000;
     keepalive 256;
 }
 
@@ -15,7 +15,7 @@ upstream calendar {
 
 # schulcloud server
 server {
-    listen       8080;
+    listen       9000;
     server_name  localhost;
 
     location / {

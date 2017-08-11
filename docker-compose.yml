@@ -11,6 +11,7 @@ services:
     restart: always
 
   server:
+    image: langleu/schulcloud-server
     build: schulcloud/server
     depends_on:
       - mongodbsc
@@ -18,11 +19,31 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
+      - SMTP_HOST=127.0.0.1
+      - SMTP_PORT=25
+      - AUTHENTICATION=verylonggenericstring
+      - AWS_ENDPOINT_URL=https://genericurl.com
+      - AWS_SECRET_ACCESS_KEY=genericstring
+      - AWS_ACCESS_KEY=genericstring
+      - MONGO_URI=mongodb://mongodbsc:27017/schulcloud
+      - CALENDAR_URI=http://web-calendar:3000
+      - CONTENT_URI=http://deprecated:666
+      - NOTIFICATION_URI=http://notification:3030
+      - PORT=9000
     ports:
-      - "8080"
+      - "9000"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
   client:
+    image: langleu/schulcloud-client
     build: schulcloud/client
     depends_on:
       - mongodbsc
@@ -33,15 +54,26 @@ services:
     environment:
       - NODE_ENV=production
       - CALENDAR_SERVICE_ENABLED=true
+      - BACKEND_URL=http://server:9000
+      - HOST=https://schul-cloud.org
     ports:
       - "3100"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
   nginx:
+    image: langleu/schulcloud-nginx-local
     build: schulcloud/nginx
     ports:
       - "80:80"
-      - "8080:8080"
+      - "9000:9000"
       - "3000:3000"
       - "3030:3030"
     links:
@@ -52,6 +84,10 @@ services:
       - notification
     environment:
       - NGINX_HOST=localhost
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
   ### calendar service
@@ -68,6 +104,7 @@ services:
     restart: always
 
   web-calendar:
+    image: langleu/schulcloud-calendar
     build: calendar/calendar-api
     ports:
       - "3000"
@@ -80,15 +117,21 @@ services:
       - DB_HOST=postgres
       - DB_USERNAME=node
       - DB_DATABASE=schulcloud_calendar
-      - SCHULCLOUD_BASE_PATH=http://nginx:8080
-      - NOTIFICATION_SERVICE_BASE_PATH=http://nginx:3030
-      - SCHULCLOUD_ALL_USERS_FOR_UUID=/resolve/users/
-      - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=/resolve/scopes/
-      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=/messages
+      - SCHULCLOUD_BASE_PATH=http://server:9000
+      - NOTIFICATION_SERVICE_BASE_PATH=http://notification:3030
+      - SCHULCLOUD_ALL_USERS_FOR_UUID=http://server:9000/resolve/users/
+      - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=http://server:9000/resolve/scopes/
+      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification:3030/messages
+      - NODE_ENV=production
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
   ### notification service
   notification:
+    image: langleu/schulcloud-notification
     build: notification/service
     ports:
       - "3030"
@@ -98,12 +141,17 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
-      - BASE_PATH=http://nginx:8080
+      - BASE_PATH=http://server:9000
       - AUTHENTICATION_API_ENDPOINT=/resolve/users/
       - AUTHORIZATION_API_ENDPOINT=/resolve/scopes/
       - RESOLVE_API_ENDPOINT=/resolve/users/
       - MAILS_API_ENDPOINT=/mails/
       - CALLBACK_API_ENDPOINT=/notification/callback/
+      - FIREBASE_TOKEN=generictoken
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
 # If using kompose, then comment out the following:

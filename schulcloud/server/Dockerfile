@@ -7,15 +7,12 @@ RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && apt-get install no
 WORKDIR schulcloud-server
 RUN npm install
 COPY check.py check.py
-COPY secrets.json config/secrets.json
-RUN rm -rf config/production.js && \
-echo "#!/bin/sh\nNODE_ENV=production npm start" >> start.sh && \
+RUN echo "#!/bin/sh\nNODE_ENV=production npm start" >> start.sh && \
 chmod +x start.sh && \
 curl https://bootstrap.pypa.io/get-pip.py >> get-pip.py && \
 python get-pip.py && \
 python -m pip install pymongo && \
 echo "#!/bin/sh\n./backup.sh -H mongodbsc:27017 -p setup/ -a import" >> seed.sh && \
 chmod +x seed.sh
-COPY production.json config/production.json
-EXPOSE 8080
+EXPOSE 9000
 CMD python check.py

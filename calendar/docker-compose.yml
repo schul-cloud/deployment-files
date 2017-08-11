@@ -14,6 +14,7 @@ services:
     restart: always
 
   web-calendar:
+    image: langleu/schulcloud-calendar
     build: calendar-api
     ports:
       - "3000"
@@ -26,11 +27,16 @@ services:
       - DB_HOST=postgres
       - DB_USERNAME=node
       - DB_DATABASE=schulcloud_calendar
-      - SCHULCLOUD_BASE_PATH=http://nginx:8080
+      - SCHULCLOUD_BASE_PATH=http://server:9000
       - NOTIFICATION_SERVICE_BASE_PATH=http://notification:3030
-      - SCHULCLOUD_ALL_USERS_FOR_UUID=/resolve/users/
-      - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=/resolve/scopes/
-      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=/messages
+      - SCHULCLOUD_ALL_USERS_FOR_UUID=http://server:9000/resolve/users/
+      - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=http://server:9000/resolve/scopes/
+      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification:3030/messages
+      - NODE_ENV=production
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
 volumes:

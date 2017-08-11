@@ -7,4 +7,4 @@ RUN npm install && \
 npm install -g nodemon gulp
 RUN gulp
 EXPOSE 3100
-CMD BACKEND_URL=http://server:8080 node bin/www
+CMD node bin/www

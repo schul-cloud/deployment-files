@@ -11,6 +11,7 @@ services:
     restart: always
 
   server:
+    image: langleu/schulcloud-server
     build: server
     depends_on:
       - mongodbsc
@@ -18,9 +19,31 @@ services:
       - mongodbsc
     environment:
       - NODE_ENV=production
+      - SMTP_HOST=127.0.0.1
+      - SMTP_PORT=25
+      - AUTHENTICATION=verylonggenericstring
+      - AWS_ENDPOINT_URL=https://genericurl.com
+      - AWS_SECRET_ACCESS_KEY=genericstring
+      - AWS_ACCESS_KEY=genericstring
+      - MONGO_URI=mongodb://mongodbsc:27017/schulcloud
+      - CALENDAR_URI=http://web-calendar:3000
+      - CONTENT_URI=http://deprecated:666
+      - NOTIFICATION_URI=http://notification:3030
+      - PORT=9000
+    ports:
+      - "9000"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
   client:
+    image: langleu/schulcloud-client
     build: client
     depends_on:
       - mongodbsc
@@ -30,19 +53,41 @@ services:
       - server
     environment:
       - NODE_ENV=production
+      - CALENDAR_SERVICE_ENABLED=true
+      - BACKEND_URL=http://server:9000
+      - HOST=https://schul-cloud.org
+    ports:
+      - "3100"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
   nginx:
+    image: langleu/schulcloud-nginx-local
     build: nginx
     ports:
       - "80:80"
-      - "8080:8080"
+      - "9000:9000"
+      - "3000:3000"
+      - "3030:3030"
     links:
       - mongodbsc
       - server
       - client
+      - web-calendar
+      - notification
     environment:
       - NGINX_HOST=localhost
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
     restart: always
 
 volumes:
