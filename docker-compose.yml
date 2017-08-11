@@ -8,6 +8,10 @@ services:
       - "27017"
     volumes:
       - 'data-sc:/data/db'
+    deploy:
+      placement:
+        contraints:
+          - node == docker-swarm-4
     restart: always
 
   server:
@@ -40,6 +44,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
   client:
@@ -66,6 +73,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
   nginx:
@@ -88,6 +98,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
   ### calendar service
@@ -101,6 +114,10 @@ services:
       - POSTGRES_DB=schulcloud_calendar
       - POSTGRES_USER=node
       - POSTGRES_PASSWORD=genericpassword
+    deploy:
+      placement:
+        contraints:
+          - node == docker-swarm-4
     restart: always
 
   web-calendar:
@@ -127,6 +144,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
   ### notification service
@@ -152,6 +172,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
 # If using kompose, then comment out the following:

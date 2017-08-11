@@ -33,7 +33,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
-
 volumes:
   data-sc:

@@ -8,6 +8,10 @@ services:
       - "27017"
     volumes:
       - 'data-sc:/data/db'
+    deploy:
+      placement:
+        contraints:
+          - node == docker-swarm-4
     restart: always
 
   server:
@@ -33,13 +37,16 @@ services:
     ports:
       - "9000"
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 1
         delay: 30s
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
   client:
@@ -59,13 +66,16 @@ services:
     ports:
       - "3100"
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 1
         delay: 30s
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
   nginx:
@@ -88,6 +98,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+    placement:
+      contraints:
+        - node.labels.node_type != db
     restart: always
 
 volumes:

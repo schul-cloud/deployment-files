@@ -11,6 +11,10 @@ services:
       - POSTGRES_DB=schulcloud_calendar
       - POSTGRES_USER=node
       - POSTGRES_PASSWORD=genericpassword
+    deploy:
+      placement:
+        contraints:
+          - node == docker-swarm-4
     restart: always
 
   web-calendar:
@@ -37,6 +41,9 @@ services:
       restart_policy:
         condition: any
         delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
     restart: always
 
 volumes:
