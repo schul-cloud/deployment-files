@@ -34,7 +34,7 @@ services:
         condition: any
         delay: 10s
       placement:
-        contraints:
+        constraints:
           - node.labels.node_type != db
     restart: always
 volumes:

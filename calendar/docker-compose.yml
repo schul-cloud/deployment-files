@@ -13,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=genericpassword
     deploy:
       placement:
-        contraints:
+        constraints:
           - node == docker-swarm-4
     restart: always
 
@@ -42,7 +42,7 @@ services:
         condition: any
         delay: 10s
       placement:
-        contraints:
+        constraints:
           - node.labels.node_type != db
     restart: always
 

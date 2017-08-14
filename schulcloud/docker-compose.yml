@@ -10,7 +10,7 @@ services:
       - 'data-sc:/data/db'
     deploy:
       placement:
-        contraints:
+        constraints:
           - node == docker-swarm-4
     restart: always
 
@@ -45,7 +45,7 @@ services:
         condition: any
         delay: 10s
       placement:
-        contraints:
+        constraints:
           - node.labels.node_type != db
     restart: always
 
@@ -74,7 +74,7 @@ services:
         condition: any
         delay: 10s
       placement:
-        contraints:
+        constraints:
           - node.labels.node_type != db
     restart: always
 
@@ -99,7 +99,7 @@ services:
         condition: any
         delay: 10s
     placement:
-      contraints:
+      constraints:
         - node.labels.node_type != db
     restart: always
 
