@@ -177,6 +177,34 @@ services:
           - node.labels.node_type != db
     restart: always
 
+  ### backup container
+  backup:
+    image: schulcloud/schulcloud-backup
+    ports:
+      - "9090"
+    depends_on:
+      - mongodbsc
+      - postgres
+    links:
+      - mongodbsc
+      - postgres
+    environment:
+      - NODE_ENV=production
+      - AUTHENTICATION=supersecretpassword
+      - ACCESS_KEY_ID=genericstring
+      - SECRET_ACCESS_KEY=genericstring
+      - ENDPOINT=https://genericurl.com
+      - PGHOST=postgres
+      - MONGO_HOST=mongodbsc
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        contraints:
+          - node.labels.node_type != db
+    restart: always
+
 # If using kompose, then comment out the following:
 volumes:
   data-sc:

@@ -70,6 +70,10 @@ For the initial running of the server no secrets are needed, but as in every pro
 	- can be adjusted to the uri of your mongodb including the username:password or let it only talk through the docker network to your mongodb.
 	- example: "mongodb://mongodbsc:27017:schulcloud"
 
+## Backup Container  
+Adjust `ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `ENDPOINT` in the `docker-compose.yml` to whatever you specified for the server.
+The `AUTHENTICATION` is needed to actually send a valid GET request, adjust it according to your needs.
+
 # Kubernetes
 This project also includes converted [kubernetes](https://github.com/kubernetes/kubernetes) files from the main `docker-compose.yml`.
 These files are converted using the [kompose tool](https://github.com/kubernetes-incubator/kompose).
