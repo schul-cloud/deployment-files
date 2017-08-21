@@ -11,7 +11,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node == docker-swarm-4
+          - node == databases
     restart: always
 
   server:
@@ -35,7 +35,7 @@ services:
       - NOTIFICATION_URI=http://notification:3030
       - PORT=9000
     ports:
-      - "9000"
+      - "9000:9000"
     deploy:
       replicas: 1
       update_config:
@@ -64,37 +64,12 @@ services:
       - BACKEND_URL=http://server:9000
       - HOST=https://schul-cloud.org
     ports:
-      - "3100"
+      - "3100:3100"
     deploy:
       replicas: 1
       update_config:
         parallelism: 1
         delay: 30s
-      restart_policy:
-        condition: any
-        delay: 10s
-      placement:
-        constraints:
-          - node.labels.node_type != db
-    restart: always
-
-  nginx:
-    image: langleu/schulcloud-nginx-local
-    build: schulcloud/nginx
-    ports:
-      - "80:80"
-      - "9000:9000"
-      - "3000:3000"
-      - "3030:3030"
-    links:
-      - mongodbsc
-      - server
-      - client
-      - web-calendar
-      - notification
-    environment:
-      - NGINX_HOST=localhost
-    deploy:
       restart_policy:
         condition: any
         delay: 10s
@@ -117,7 +92,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node == docker-swarm-4
+          - node == databases
     restart: always
 
   web-calendar:
