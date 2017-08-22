@@ -31,7 +31,7 @@ services:
       - AWS_ACCESS_KEY=genericstring
       - MONGO_URI=mongodb://mongodbsc:27017/schulcloud
       - CALENDAR_URI=http://web-calendar:3000
-      - CONTENT_URI=http://deprecated:666
+      - CONTENT_URI=http://content:4040
       - NOTIFICATION_URI=http://notification:3030
       - PORT=9000
     ports:
