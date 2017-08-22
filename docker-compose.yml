@@ -11,7 +11,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node == databases
+          - node.hostname == databases
     restart: always
 
   server:
@@ -92,7 +92,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node == databases
+          - node.hostname == databases
     restart: always
 
   web-calendar:
@@ -184,7 +184,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node == databases
+          - node.hostname == databases
     command: [ "--replSet", "rs" ]
 
   content-elasticsearch:
@@ -204,7 +204,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node == elasticsearch
+          - node.hostname == elasticsearch
 
   content-mongo-connector:
     image: schulcloud/schulcloud-content-mongo-connector
@@ -256,4 +256,4 @@ volumes:
   data-sc:
   data-calendar:
   data-schulcloud-content:
-  data-schulcloud-content:
+  data-schulcloud-elasticsearch:
