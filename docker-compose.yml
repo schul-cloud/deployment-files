@@ -180,7 +180,7 @@ services:
     volumes:
       - data-schulcloud-content:/data/db
     ports:
-      - "27018"
+      - "27017"
     deploy:
       placement:
         constraints:
