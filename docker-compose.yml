@@ -158,6 +158,7 @@ services:
     build: content/content-api
     environment:
       BACKEND_URL: https://server:9000/
+      MONGO_URI: mongodb://content-mongodb:27017/schulcloud_content
     ports:
       - "4040"
     depends_on:
