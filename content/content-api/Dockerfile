@@ -1,8 +1,19 @@
-FROM node:7
+FROM node:6.10.2
 
-WORKDIR ~/
-RUN apt-get update && apt-get install -y git && git clone https://github.com/schulcloud/schulcloud-content-api.git
-WORKDIR schulcloud-content-api
-RUN npm install
-EXPOSE 8090
-CMD NODE_ENV=production npm start
+# Prepare non-root user and folders
+RUN useradd --system --user-group --create-home app && \
+    mkdir /app && chown app:app /app
+
+# Clone Project into Container
+WORKDIR /app
+RUN git clone --depth=1 https://github.com/schul-cloud/schulcloud-content.git
+
+# Install Dependencies
+WORKDIR /app/schulcloud-content
+RUN npm install && chown -R app:app .
+
+USER app
+WORKDIR /app/schulcloud-content
+
+EXPOSE 4040
+CMD ["npm", "start"]

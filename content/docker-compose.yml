@@ -1,52 +1,74 @@
-version: "2"
+version: "3"
 
 services:
-    ### content service
-  mongodb:
-    image: langleu/schulcloud-mongodb
-    ports:
-      - "27017"
-    volumes:
-      - 'data-content:/data/db'
 
-  elasticsearch:
-    image: langleu/schulcloud-elasticsearch
+  ### content service
+  content:
+    image: schulcloud/schulcloud-content
+    build: content/content-api
+    environment:
+      BACKEND_URL: https://server:9000/
+    ports:
+      - "4040"
+    depends_on:
+      - content-mongodb
+      - content-elasticsearch
+    links:
+      - content-mongodb:mongodb
+      - content-elasticsearch:elasticsearch
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        constraints:
+          - node.labels.node_type != db
+    restart: always
+  
+  content-mongodb:
+    image: mongo:3.4.3
+    volumes:
+      - data-schulcloud-content:/data/db
+    ports:
+      - "27018"
+    deploy:
+      placement:
+        constraints:
+          - node == databases
+    command: [ "--replSet", "rs" ]
+
+  content-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms6144m -Xmx6144m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data-schulcloud-elasticsearch:/usr/share/elasticsearch/data
     ports:
       - "9200"
-      - "9300"
-    volumes:
-      - 'data-content:/usr/share/elasticsearch/data'
+    deploy:
+      placement:
+        constraints:
+          - node == elasticsearch
 
-  mongo-connector:
-    image: langleu/schulcloud-mongo-connector
-    links:
-      - mongodb
-      - elasticsearch
+  content-mongo-connector:
+    image: schulcloud/schulcloud-content-mongo-connector
+    build: content/content-mongo-connector
     depends_on:
-      - mongodb
-      - elasticsearch
-    restart: always
-
-  web-crawler:
-    image: langleu/schulcloud-content-crawler
-    ports:
-      - "8091"
-    depends_on:
-      - mongodb
+      - content-mongodb
+      - content-elasticsearch
     links:
-      - mongodb
-    environment:
-      - NODE_ENV=production
-      - ANTARES_SECRET=
-      - YOUTUBE_API_KEY=
-
-  web-content:
-    image: langleu/schulcloud-content-api
-    ports:
-      - "8090"
-    depends_on:
-      - elasticsearch
-    links:
-      - elasticsearch
-    environment:
-      - NODE_ENV=production
+      - content-mongodb:mongodb
+      - content-elasticsearch:elasticsearch
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        constraints:
+          - node.labels.node_type != db
