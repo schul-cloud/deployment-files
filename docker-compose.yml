@@ -46,7 +46,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
     restart: always
 
   client:
@@ -75,7 +75,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
     restart: always
 
   ### calendar service
@@ -121,7 +121,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
     restart: always
 
   ### notification service
@@ -149,7 +149,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
     restart: always
 
   ### content service
@@ -173,7 +173,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
     restart: always
   
   content-mongodb:
@@ -217,7 +217,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
 
   ### backup container
   backup:
@@ -244,7 +244,7 @@ services:
         delay: 10s
       placement:
         constraints:
-          - node.labels.node_type != db
+          - node.labels.node_type == worker
     restart: always
 
 # If using kompose, then comment out the following:
