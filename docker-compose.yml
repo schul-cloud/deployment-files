@@ -205,6 +205,11 @@ services:
   content-mongo-connector:
     image: schulcloud/schulcloud-content-mongo-connector
     build: content/content-mongo-connector
+    environment:
+      - MONGO_URI=content-mongodb
+      - MONGO_PORT=27017
+      - ELASTIC_URI=content-elasticsearch
+      - ELASTIC_PORT=9200
     depends_on:
       - content-mongodb
       - content-elasticsearch
