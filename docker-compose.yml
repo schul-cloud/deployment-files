@@ -193,6 +193,7 @@ services:
     environment:
       - cluster.name=docker-cluster
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - xpack.security.enabled=false
     volumes:
       - data-schulcloud-elasticsearch:/usr/share/elasticsearch/data
     ports:
