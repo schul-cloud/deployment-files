@@ -15,7 +15,7 @@ services:
     restart: always
 
   server:
-    image: langleu/schulcloud-server
+    image: schulcloud/schulcloud-server
     build: schulcloud/server
     depends_on:
       - mongodbsc
@@ -50,7 +50,7 @@ services:
     restart: always
 
   client:
-    image: langleu/schulcloud-client
+    image: schulcloud/schulcloud-client
     build: schulcloud/client
     depends_on:
       - mongodbsc
